@@ -124,7 +124,7 @@ B_{\mathrm S}(t)
 \end{aligned}
 $$
 
-**Step 2: distinguish the signal from the executable order price.** Define the specific StrategyQuant MT-Keltner output $K_{j,t}=\mathrm{SQ}_{\mathrm{MTKeltnerChannel}}(20,1.5,j)_t$ and ATR $A_t=\mathrm{SQ}_{\mathrm{ATR}}(40)_t$. The selector $j$ is **0 on long** and **1 on short**; its exact internal channel semantics remain subject to library parity.
+**Step 2: distinguish the signal from the executable order price.** Let $K_{j,t}$ denote `SQ_MTKeltnerChannel(20, 1.5, j)` evaluated on completed M1 bar $t$, and let $A_t$ denote `SQ_ATR(40)` on that bar. The selector $j$ is **0 on long** and **1 on short**; its exact internal channel semantics remain subject to library parity.
 
 $$
 \begin{aligned}
@@ -308,7 +308,7 @@ $$
 =\frac{1}{D}\sum_{d=1}^{D}\Delta_d.
 $$
 
-**Step 1 — an arithmetic illustration, not project results:** three session differences of `-\$20`, `+\$60`, and `+\$80` yield
+**Step 1 — an arithmetic illustration, not project results:** three session differences of **−$20**, **+$60**, and **+$80** yield
 
 $$
 \widehat{\Delta}
