@@ -30,35 +30,35 @@ The objective is to discover whether an observable market state at decision time
 
 **Optimization objective**
 
-$
+$$
 (\theta^\ast,\pi^\ast) = \arg\max_{(\theta,\pi)\in\mathcal{F}} \mathbb{E}_{\mathrm{forward}}\left[\Pi_{\mathrm{net}}(\theta,\pi)\right]
-$
+$$
 
 The feasible set $\mathcal{F}$ requires **all four independent constraints**:
 
 **Drawdown limit**
 
-$
+$$
 \mathrm{DD}(\theta,\pi) \le D_{\max}
-$
+$$
 
 **Per-trade risk budget**
 
-$
+$$
 \mathrm{Risk}_{\mathrm{trade}} \le R_{\max}
-$
+$$
 
 **No future or unavailable information**
 
-$
+$$
 T_{\mathrm{available}}(x) \le T_{\mathrm{decision}}
-$
+$$
 
 **Deterministic risk-safe execution policy**
 
-$
+$$
 \pi \in \Pi_{\mathrm{deterministic,safe}}
-$
+$$
 
 Here $\theta$ denotes signal parameters, $\pi$ denotes the execution/exit policy, and $\Pi_{\mathrm{net}}$ is net realized P&L. **Drawdown and stop constraints are policy limits, not mathematical guarantees**: gaps, rejections, and slippage can exceed a planned loss.
 
@@ -125,29 +125,29 @@ For clarity, $\mathbf{1}[A]$ denotes the indicator of proposition $A$: it equals
 
 **Long entry**
 
-$
+$$
 B_{\mathrm{L}}(t) = \mathbf{1}\left[\mathrm{LowD}(1)[1] > \mathrm{EMA}_{20}(C)[3] \land \mathrm{LowD}(1) < \mathrm{EMA}_{20}(C)[2]\right]
-$
+$$
 
 **Short entry**
 
-$
+$$
 B_{\mathrm{S}}(t) = \mathbf{1}\left[\mathrm{HighD}(1)[1] < \mathrm{EMA}_{20}(C)[3] \land \mathrm{HighD}(1) > \mathrm{EMA}_{20}(C)[2]\right]
-$
+$$
 
 **Step 2: distinguish the signal from the executable order price.** Let $K_{j,t}$ denote `SQ_MTKeltnerChannel(20, 1.5, j)` evaluated on completed M1 bar $t$, and let $A_t$ denote `SQ_ATR(40)` on that bar. The selector $j$ is **0 on long** and **1 on short**; its exact internal channel semantics remain subject to library parity.
 
 **Long buy-stop price**
 
-$
+$$
 P^{\mathrm{stop}}_{\mathrm{L},t} = \mathrm{RoundTick}\left(K_{0,t-2}+2.60\cdot A_{t-2}\right)
-$
+$$
 
 **Short sell-stop price**
 
-$
+$$
 P^{\mathrm{stop}}_{\mathrm{S},t} = \mathrm{RoundTick}\left(K_{1,t-2}-2.60\cdot A_{t-2}\right)
-$
+$$
 
 **Step 3: state the baseline execution contract.** A long `Buy Stop` or short `Sell Short Stop` is submitted for the **next bar** only when flat and when trading options permit new orders. The original PowerLanguage sets `IntrabarOrderGeneration = false`.
 
@@ -165,13 +165,13 @@ $$
 
 **Step 2 — gross value for one contract:**
 
-$
+$$
 V_{\mathrm{NQ}} = 91.25(20) = \$1{,}825
-$
+$$
 
-$
+$$
 V_{\mathrm{MNQ}} = 91.25(2) = \$182.50
-$
+$$
 
 **Step 3 — trade expectancy from the reported aggregate (descriptive only):**
 
@@ -347,13 +347,13 @@ $$
 
 Suppose $m=100$ *independent* hypotheses are tested at nominal $\alpha=0.05$.
 
-$
+$$
 \Pr(\text{at least one false positive}) = 1-(1-\alpha)^m
-$
+$$
 
-$
+$$
 1-(1-0.05)^{100} = 1-0.95^{100} \approx 0.994
-$
+$$
 
 Independence is an illustrative assumption; real strategy candidates are highly correlated. A conservative Bonferroni benchmark for family-wise error is
 
@@ -398,27 +398,27 @@ The earlier CN4NQ v0.3.2.1 research contract defines a strict **retrospective** 
 
 Define the Boolean gates for pivot proximity, runner magnitude, initial heat, and path quality:
 
-$
+$$
 I_{\mathrm{pivot},i} = \mathbf{1}\left[d_{\mathrm{pivot,bars},i}\le 3 \land d_{\mathrm{pivot,ticks},i}\le16\right]
-$
+$$
 
-$
+$$
 I_{\mathrm{runner},i} = \mathbf{1}\left[\mathrm{RunnerTicks}_i\ge40\right]
-$
+$$
 
-$
+$$
 I_{\mathrm{heat},i} = \mathbf{1}\left[\mathrm{MAE}_{\mathrm{before\,MFE},i}\le12\right]
-$
+$$
 
-$
+$$
 I_{\mathrm{path},i} = \mathbf{1}\left[\mathrm{Slope}_{\mathrm{ticks/bar},i}\ge1 \land R_i^2\ge0.45\right]
-$
+$$
 
 The retrospective GOLD label is their conjunction:
 
-$
+$$
 G_i = I_{\mathrm{pivot},i} I_{\mathrm{runner},i} I_{\mathrm{heat},i} I_{\mathrm{path},i}
-$
+$$
 
 The labels measure the **direction, proximity to launch, favorable excursion, initial adverse heat, and trend coherence** of an observed path. A 2/2 pivot needs two *future* bars to be confirmed (3/3 needs three); unconfirmed hindsight pivots and post-entry excursion are **never** permissible contemporaneous trade features. These thresholds characterize a historical labeling configuration, not a new recommended stop or a validated live predictor.
 
