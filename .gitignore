@@ -1,0 +1,45 @@
+﻿# Restricted or potentially licensed IQFeed/market data
+/NQ_m*.txt
+/NQ_*.txt
+/data/raw/
+/data/vendor/
+/datasets/
+/data_exports/
+/ticks/
+/market_data/
+
+# StrategyQuant exports and local generated strategies (review rights before publishing)
+/SQX_*
+/*.xml
+/*.els
+
+# Raw performance reports, trading/account information and local screenshots
+/*.xlsx
+/*.xls
+/ATS Backtest*.png
+/Backtesting*.png
+/reports/private/
+/backtests/raw/
+
+# Secrets, temporary files, logs and local model artifacts
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+*.log
+*.tmp
+*.bak
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+/checkpoints/
+/models/weights/
+/.venv/
+/venv/
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
