@@ -44,7 +44,7 @@ T_{\mathrm{available}}(x)\le T_{\mathrm{decision}},\\[2pt]
 }
 $$
 
-Here `\theta` denotes signal parameters, `\pi` denotes the execution/exit policy, and `\Pi_{\mathrm{net}}` is net realized P&L. **Drawdown and stop constraints are policy limits, not mathematical guarantees**: gaps, rejections, and slippage can exceed a planned loss.
+Here $\theta$ denotes signal parameters, $\pi$ denotes the execution/exit policy, and $\Pi_{\mathrm{net}}$ is net realized P&L. **Drawdown and stop constraints are policy limits, not mathematical guarantees**: gaps, rejections, and slippage can exceed a planned loss.
 
 Our working sequence is deliberately **baseline → parity → risk → features → execution → independent setups → optional neural intelligence**. Every modification is an isolated experiment with a frozen comparator and a no-promotion outcome when evidence is insufficient.
 
@@ -101,35 +101,37 @@ These are *historical report observations*, not a reproduced or forward-validate
 
 ### Worked derivation A — the original signal equations
 
-Let `C_t` be the completed one-minute close, `E_t=\operatorname{EMA}_{20}(C)_t`, and `L^{(D-1)}` / `H^{(D-1)}` be the prior-day low / high returned by the platform functions. Bracket offsets are *source-code bar offsets*, not a claim about the platform's daily-boundary semantics.
+Let $C_t$ be the completed one-minute close, $E_t=\mathrm{EMA}_{20}(C)_t$, and $L^{(D-1)}$ / $H^{(D-1)}$ be the prior-day low / high returned by the platform functions. Bracket offsets are *source-code bar offsets*, not a claim about the platform's daily-boundary semantics.
 
 **Step 1: derive the long and short activation predicates exactly as exported.**
+
+For clarity, $\mathbf{1}[A]$ denotes the indicator of proposition $A$: it equals 1 when $A$ is true and 0 otherwise.
 
 $$
 \begin{aligned}
 B_{\mathrm L}(t)
- &= \mathbf 1\!\left[
-  \operatorname{LowD}(1)[1] > \operatorname{EMA}_{20}(C)[3]
+ &= \mathbf{1}\left[
+  \mathrm{LowD}(1)[1] > \mathrm{EMA}_{20}(C)[3]
   \;\land\;
-  \operatorname{LowD}(1) < \operatorname{EMA}_{20}(C)[2]
+  \mathrm{LowD}(1) < \mathrm{EMA}_{20}(C)[2]
  \right],\\[5pt]
 B_{\mathrm S}(t)
- &= \mathbf 1\!\left[
-  \operatorname{HighD}(1)[1] < \operatorname{EMA}_{20}(C)[3]
+ &= \mathbf{1}\left[
+  \mathrm{HighD}(1)[1] < \mathrm{EMA}_{20}(C)[3]
   \;\land\;
-  \operatorname{HighD}(1) > \operatorname{EMA}_{20}(C)[2]
+  \mathrm{HighD}(1) > \mathrm{EMA}_{20}(C)[2]
  \right].
 \end{aligned}
 $$
 
-**Step 2: distinguish the signal from the executable order price.** Define the specific StrategyQuant MT-Keltner output `K_{j,t}=\operatorname{SQ\_MTKeltnerChannel}(20,1.5,j)_t` and ATR `A_t=\operatorname{SQ\_ATR}(40)_t`. The selector `j` is **0 on long** and **1 on short**; its exact internal channel semantics remain subject to library parity.
+**Step 2: distinguish the signal from the executable order price.** Define the specific StrategyQuant MT-Keltner output $K_{j,t}=\mathrm{SQ}_{\mathrm{MTKeltnerChannel}}(20,1.5,j)_t$ and ATR $A_t=\mathrm{SQ}_{\mathrm{ATR}}(40)_t$. The selector $j$ is **0 on long** and **1 on short**; its exact internal channel semantics remain subject to library parity.
 
 $$
 \begin{aligned}
 P^{\mathrm{stop}}_{\mathrm L,t}
- &= \operatorname{RoundTick}\!\left(K_{0,t-2}+2.60\,A_{t-2}\right),\\[3pt]
+ &= \mathrm{RoundTick}\!\left(K_{0,t-2}+2.60\cdot A_{t-2}\right),\\[3pt]
 P^{\mathrm{stop}}_{\mathrm S,t}
- &= \operatorname{RoundTick}\!\left(K_{1,t-2}-2.60\,A_{t-2}\right).
+ &= \mathrm{RoundTick}\!\left(K_{1,t-2}-2.60\cdot A_{t-2}\right).
 \end{aligned}
 $$
 
@@ -209,7 +211,7 @@ Risk is enforced at three levels: **strategy geometry**, **account limits**, and
 
 ### Worked derivation D — a dollar risk budget in tick space
 
-Let `q` be the *integer number of contracts*, `v_{\mathrm{tick}}` be USD per tick per contract, `n` the stop distance in ticks, and `c` the assumed round-trip cost.
+Let $q$ be the *integer number of contracts*, $v_{\mathrm{tick}}$ be USD per tick per contract, $n$ the stop distance in ticks, and $c$ the assumed round-trip cost.
 
 $$
 R_{\mathrm{modeled}}=q\,n\,v_{\mathrm{tick}}+c.
@@ -224,7 +226,7 @@ n_{\max}=
 \right\rfloor.
 $$
 
-**Step 2 — illustrative one-NQ budget**, with `R_{\max}=\$500`, `q=1`, `v_{\mathrm{tick}}=\$5`, and `c=\$4`:
+**Step 2 — illustrative one-NQ budget**, with $R_{\max}=\$500$, $q=1$, $v_{\mathrm{tick}}=\$5$, and $c=\$4$:
 
 $$
 n_{\max}
@@ -265,14 +267,14 @@ S^{\mathrm S}_t
 }
 $$
 
-**Step 1 — numerical long example:** `C_t=30{,}000`, `A_t=40` points, `k=2`, old stop `S_{t-1}=29{,}900`.
+**Step 1 — numerical long example:** $C_t=30{,}000$, $A_t=40$ points, $k=2$, old stop $S_{t-1}=29{,}900$.
 
 $$
 S_t=\max(29{,}900,\;30{,}000-2(40))
 =\boxed{29{,}920}.
 $$
 
-**Step 2 — adverse next bar:** `C_{t+1}=29{,}980` and `A_{t+1}=40`.
+**Step 2 — adverse next bar:** $C_{t+1}=29{,}980$ and $A_{t+1}=40$.
 
 $$
 S_{t+1}
@@ -292,14 +294,14 @@ We distinguish **market-structural significance** (a level, pivot, displacement,
 
 ### Worked derivation F — paired, cost-adjusted incremental utility
 
-For a session `d`, compute the return of the new policy and of the *frozen* baseline under the same opportunity/fee/fill convention:
+For a session $d$, compute the return of the new policy and of the *frozen* baseline under the same opportunity/fee/fill convention:
 
 $$
 \Delta_d=\Pi_{d,\mathrm{new}}^{\mathrm{net}}
          -\Pi_{d,\mathrm{base}}^{\mathrm{net}}.
 $$
 
-For `D` evaluation sessions,
+For $D$ evaluation sessions,
 
 $$
 \widehat{\Delta}
@@ -314,13 +316,13 @@ $$
 =\boxed{\$40\text{ per session}}.
 $$
 
-**Step 2 — quantify uncertainty correctly:** resample *whole sessions or contiguous blocks* (not millions of autocorrelated M1 rows), creating bootstrap replicates `\widehat{\Delta}^{*(b)}`.
+**Step 2 — quantify uncertainty correctly:** resample *whole sessions or contiguous blocks* (not millions of autocorrelated M1 rows), creating bootstrap replicates $\widehat{\Delta}^{(b)}$.
 
 $$
-\mathrm{CI}_{95\%}
+\mathrm{CI}_{0.95}
 =\left[
-Q_{0.025}\!\left(\widehat{\Delta}^{*}\right),
-Q_{0.975}\!\left(\widehat{\Delta}^{*}\right)
+Q_{0.025}\left(\{\widehat{\Delta}^{(b)}\}_{b=1}^{B}\right),
+Q_{0.975}\left(\{\widehat{\Delta}^{(b)}\}_{b=1}^{B}\right)
 \right].
 $$
 
@@ -328,7 +330,7 @@ $$
 
 ### Worked derivation G — multiple comparisons and selection bias
 
-Suppose `m=100` *independent* hypotheses are tested at nominal `\alpha=0.05`.
+Suppose $m=100$ *independent* hypotheses are tested at nominal $\alpha=0.05$.
 
 $$
 \begin{aligned}
@@ -382,7 +384,7 @@ The earlier CN4NQ v0.3.2.1 research contract defines a strict **retrospective** 
 
 $$
 G_i=
-\mathbf 1\!\left[
+\mathbf{1}\left[
 \begin{array}{l}
 d_{\mathrm{pivot,bars}}\le 3,\quad
 d_{\mathrm{pivot,ticks}}\le16,\\
